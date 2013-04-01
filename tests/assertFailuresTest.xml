@@ -5,8 +5,8 @@
 
  <target name="testCatchFailure">
    <au:expectfailure message="haltOnFailure set to true. This should fail.">
-   <mxunittask server="localhost" port="8500"
-               outputdir="tests/results"
+   <mxunittask server="${server.host}" port="${server.port.http}"
+               outputdir="results"
                testResultsSummary="au.test.properties"
                verbose="true"
                haltonerror="true"
@@ -22,7 +22,7 @@
  <target name="setUp">
    <!-- for log assertions -->
   <au:logcontent level="verbose" />
-  <taskdef name="mxunittask" classname="org.mxunit.ant.MXUnitAntTask" classpath="../mxunit-ant.jar"   />
+  <taskdef name="mxunittask" classname="org.mxunit.ant.MXUnitAntTask" classpath="${mxunit.jar}"   />
  </target>
 
 

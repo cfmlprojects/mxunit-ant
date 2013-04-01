@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="MXUnitTask" basedir="." default="main">
 
+	<dirname property="mxunittask.basedir" file="${ant.file.MXUnitTask}" />
+	<path id="project.classpath">
+		<fileset dir="${mxunittask.basedir}/tests/lib">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${mxunittask.basedir}/lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	<property file="testprops.properties" />
+	<!-- load the svn task -->
+ 	<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask" classpathref="project.classpath"/>
+	<taskdef uri="antlib:org.apache.ant.antunit" resource="org/apache/ant/antunit/antlib.xml" classpathref="project.classpath" />
 
 	<target name="init">
 		<echo message="Attempting to include buildprops/${user.name}.properties for any property overrides" />
 		<property file="buildprops/${user.name}.properties" />
-		<property file="buildprops/build.properties" />
+		<property file="${mxunittask.basedir}/buildprops/build.properties" />
 
 		<path id="project.class.path">
-			<fileset dir="lib">
+			<fileset dir="${mxunittask.basedir}/lib">
 				<include name="**/*.jar" />
 			</fileset>
 		</path>
@@ -20,13 +33,14 @@
 	</target>
 
 	<target name="compile" description="Compiles the Task" depends="clean,init">
-		<mkdir dir="${classes.dir}" />
-		<javac verbose="true" srcdir="${src.dir}" destdir="${classes.dir}" classpathref="project.class.path" target="1.5" source="1.5" />
+		<mkdir dir="${mxunit.classes.dir}" />
+		<javac verbose="true" srcdir="${mxunit-ant.src.dir}" destdir="${mxunit.classes.dir}" classpathref="project.class.path" target="1.5" source="1.5" />
 	</target>
 
 	<target name="jar" description="JARs the Task" depends="compile">
-		<jar destfile="${mxunit.jar}" basedir="${classes.dir}">
-			<fileset dir="lib/httpclient" />
+		<delete file="${mxunit.jar}" />
+		<jar destfile="${mxunit.jar}" basedir="${mxunit.classes.dir}">
+			<fileset dir="${mxunittask.basedir}/lib/httpclient" />
 			<!-- -->
 		</jar>
 	</target>
@@ -53,8 +67,15 @@
 
 	<target name="runTests" description="Test the MXUnit Task" depends="compile,jar">
 		<echo>Running tests</echo>
+		<property name="mxunit.src.dir" location="../mxunit"/>
+		<property name="server.port.http" location="8500"/>
+		<property name="server.host" location="127.0.0.1"/>
 		<!-- Run the ant-unit tests in ./tests-->
-		<ant dir="tests" />
+		<ant inheritAll="false" antfile="build.xml" dir="tests" useNativeBaseDir="true">
+		  <property name="server.port.http" value="${server.port.http}"/>
+		  <property name="server.host" value="${server.host}"/>
+		  <property name="mxunit.src.dir" location="${mxunit.src.dir}"/>
+		</ant>
 	</target>
 
 	<target name="use" description="Use the MXUnit Task" depends="jar">
@@ -103,19 +124,11 @@
 		</junitreport>
 	</target>
 
-
-
 	<!-- Billy's stuff ....-->
 	<target name="browse" depends="junitreport">
 		<exec executable="C:\Program Files\Internet Explorer\iexplore.exe">
 			<arg value="C:\Documents and Settings\Billy\workspace\mxunit-ant\testresults\html\index.html" />
 		</exec>
 	</target>
-
-
-
-
-
-
 
 </project>

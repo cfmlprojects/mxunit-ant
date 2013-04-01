@@ -1,0 +1,5 @@
+tests/svnTest/
+tests/results/
+bin/
+dist/
+mxunit-test.log

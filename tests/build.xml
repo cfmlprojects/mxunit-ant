@@ -1,26 +1,29 @@
 <?xml version="1.0"?>
+<project name="mxunitantunit" xmlns:au="antlib:org.apache.ant.antunit" xmlns="antlib:org.apache.tools.ant" default="main" basedir=".">
 
- <project xmlns:au="antlib:org.apache.ant.antunit"
-          xmlns="antlib:org.apache.tools.ant" default="main">
-
-
-<!-- This could be a runTests target within the main build file -->
-
- <target name="main">
-  <echo level="info">Running antunit tests</echo>
-
-  <record name="mxunit-test.log" loglevel="verbose"/>
-
-  <au:antunit>
-    <fileset dir=".">
-      <!-- include all tests the start with anything followed by Test.xml -->
-      <include name="*Test.xml" />
-    </fileset>
-    <au:plainlistener />
-    
-  </au:antunit>
-  
- </target>
-
+	<target name="main">
+		<property name="server.port.http" value="8500" />
+		<property name="server.host" value="127.0.0.1" />
+		<property name="mxunit.src.dir" location="../../mxunit" />
+		<property name="mxunit.jar" location="../dist/mxunit-ant.jar" />
+		<echo level="info">Running antunit tests (server:${server.host}:${server.port.http})</echo>
+		<echo level="info">CMFL Sources: ${mxunit.src.dir}</echo>
+		<delete dir="results" />
+		<mkdir dir="results" />
+		<delete file="mxunit-test.log" />
+		<record name="mxunit-test.log" loglevel="verbose" />
+		<au:antunit>
+			<propertyset id="properties-starting-with-foo">
+				<propertyref prefix="server." />
+				<propertyref prefix="mxunit.src.dir" />
+				<propertyref prefix="mxunit.jar" />
+			</propertyset>
+			<fileset dir=".">
+				<!-- include all tests the start with anything followed by Test.xml -->
+				<include name="*Test.xml" />
+			</fileset>
+			<au:plainlistener />
+		</au:antunit>
+	</target>
 
 </project>

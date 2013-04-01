@@ -1,71 +1,59 @@
 <?xml version="1.0"?>
-
- <project xmlns:au="antlib:org.apache.ant.antunit"
+<project xmlns:au="antlib:org.apache.ant.antunit"
           xmlns="antlib:org.apache.tools.ant" >
 
+	<property name="svn.test.dir" location="./svnTest" />
+	<available file="${svn.test.dir}" property="svntest.is.available" />
+	
+	<target name="_checkout_ifnot" unless="svntest.is.available">
+		<svn username="${username}" password="${password}">
+			<checkout url="https://mxunit.googlecode.com/svn/mxunit/branches/sandbox" recurse="false" destPath="${svn.test.dir}" />
+		</svn>
+	</target>
 
-  <target name="_testUpdate">
-    <delete file="svnTest/index.cfm"/>
-    <delete file="svnTest/Application.cfm"/> 
-    <svn username="${username}" password="${password}">
-     <update dir="svnTest" recurse="false" revision="HEAD" />
-    </svn>
-    <au:assertFileExists file="svnTest/index.cfm"/>
-    <au:assertFileExists file="svnTest/Application.cfm"/>
-  </target>
-  
-  
-  
-  
-  <target name="testNotUpdated">
-      <svn username="${username}" password="${password}">
-       <update dir="svnTest" recurse="false" revision="HEAD" />
-      </svn>
-      <touch file="svnTest/License.txt" datetime="01/01/2008 7:00 pm"/>
-       <svn username="${username}" password="${password}">
-         <update dir="svnTest" recurse="false" revision="HEAD" />
-        <status path="svnTest/License.txt" 
+	<target name="_testUpdate" depends="_checkout_ifnot">
+		<delete file="svnTest/index.cfm"/>
+		<delete file="svnTest/Application.cfm"/>
+		<svn username="${username}" password="${password}">
+			<update dir="${svn.test.dir}" recurse="false" revision="HEAD" />
+		</svn>
+		<au:assertFileExists file="svnTest/index.cfm"/>
+		<au:assertFileExists file="svnTest/Application.cfm"/>
+	</target>
+
+	<target name="testNotUpdated" depends="_checkout_ifnot">
+		<svn username="${username}" password="${password}">
+			<update dir="${svn.test.dir}" recurse="false" revision="HEAD" />
+		</svn>
+		<touch file="svnTest/License.txt" datetime="01/01/2008 7:00 pm"/>
+		<svn username="${username}" password="${password}">
+			<update dir="${svn.test.dir}" recurse="false" revision="HEAD" />
+			<status path="${svn.test.dir}/License.txt" 
                 textStatusProperty="testStatus.textStatus" 
                 propStatusProperty="testStatus.propStatus" 
                 lastChangedRevisionProperty="testStatus.lastCommitRevision" 
                 revisionProperty="testStatus.revision" 
-                lastCommitAuthorProperty="testStatus.lastCommitAuthor" />    
-      </svn>
-     <au:assertFileExists file="svnTest/License.txt"/>
-  </target>
+                lastCommitAuthorProperty="testStatus.lastCommitAuthor" />
+		</svn>
+		<au:assertFileExists file="${svn.test.dir}/License.txt"/>
+	</target>
 
+	<target name="setUp">
+		<!-- for log assertions -->
+		<au:logcontent level="verbose" />
+		<path id="project.classpath">
+			<pathelement location="lib/svnjavahl.jar" />
+			<pathelement location="lib/svnant.jar/" />
+			<pathelement location="lib/svnClientAdapter.jar/" />
+		</path>
+		<property file="testprops.properties" />
+		<!-- load the svn task -->
+		<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask" classpathref="project.classpath"/>
+	</target>
 
- <target name="setUp">
-   <!-- for log assertions -->
-  <au:logcontent level="verbose" />
-  
-   <path id="project.classpath">
-     <pathelement location="../lib/svnjavahl.jar" /> 
-     <pathelement location="../lib/svnant.jar/" />
-     <pathelement location="../lib/svnClientAdapter.jar/" />
-   </path>  
-    <property file="testprops.properties" />
-    <!-- load the svn task -->
-  <taskdef resource="svntask.properties" classpathref="project.classpath"/>
-  
-  <!-- 
-    @pre some files and svn info need to be present! 
-    The below may be a one time deal, but check out a few files from the sandbox, delete them,
-    do an update and see if they come back.
-  
- <svn username="${username}" password="${password}">
-   <checkout url="https://mxunit.googlecode.com/svn/mxunit/branches/sandbox" recurse="false" destPath="svnTest" />
-  </svn>
-   -->
-  
-  
- </target>
-
-
-  <!-- clean up -->
-  <target name="tearDown">
-     <!-- clean up -->
-  </target>
-
+	<!-- clean up -->
+	<target name="tearDown">
+		<!-- clean up -->
+	</target>
 
 </project>
