@@ -331,7 +331,12 @@ private void doTest(String queryString, String fileName, String runner) throws B
         bis.close();
       }
     }
-    catch(java.io.IOException ioe){
+	catch (java.net.ConnectException ce) {
+	  System.out.println("[mxunit error] Error connecting");
+	  ce.printStackTrace();
+	  throw new BuildException(ce);
+	}
+  	catch(java.io.IOException ioe){
       System.out.println("[mxunit error] Error trying to write to : " + outputdir + ". Please make sure this output dircetory exists.");
       System.out.println("[mxunit error] Exiting ... see stacktrace for details.");
       ioe.printStackTrace();
