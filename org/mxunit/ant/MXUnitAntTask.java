@@ -41,6 +41,11 @@ public class MXUnitAntTask extends Task {
       this.port = port;
     }
 
+    int retries = 3;
+    public void setRetires(int retries) {
+    	this.retries = retries;
+    }
+    
     String defaultRunner = "/mxunit/runner/HttpAntRunner.cfc";
     public void setDefaultRunner(String defaultRunner) {
       if(defaultRunner.equals("")){
@@ -156,14 +161,11 @@ public class MXUnitAntTask extends Task {
   public MXUnitAntTask() {
 
     if(this.authMethod.equals("no_auth") ){
-     this.helper = new HttpHelper();
+     this.helper = new HttpHelper(this.retries);
     }
     else{
-      this.helper = new HttpHelper(this.username, this.password, this.authMethod);
+      this.helper = new HttpHelper(this.username, this.password, this.authMethod, this.retries);
     }
-
-
-
 
   }
 

@@ -3,6 +3,7 @@ import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.auth.*;
 import org.apache.commons.httpclient.methods.*;
 import org.apache.commons.httpclient.util.*;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import java.io.*;
 import java.util.*;
 import org.apache.tools.ant.BuildException;
@@ -95,18 +96,24 @@ public class HttpHelper {
   }
 
 
- public HttpHelper(){
+ public HttpHelper(int retries){
        this.client = new HttpClient();
        this.client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+       DefaultHttpMethodRetryHandler retryhandler = new DefaultHttpMethodRetryHandler(retries, false);
+       this.client.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryhandler);
 
        this.doAuthentication = false;
       // System.out.println("[HttpHelper] NO authentication");
  }
 
   //When authentication is required
-  public HttpHelper(String username, String password, String authMethod){
+  public HttpHelper(String username, String password, String authMethod, int retries){
        this.client = new HttpClient();
        this.client.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
+       
+       DefaultHttpMethodRetryHandler retryhandler = new DefaultHttpMethodRetryHandler(retries, false);
+       this.client.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, retryhandler);
+       
        //System.out.println("[HttpHelper] Using authentication");
        //Set up authentication
        if(!authMethod.equals("no_auth")){
