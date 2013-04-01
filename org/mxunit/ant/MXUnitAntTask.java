@@ -295,7 +295,9 @@ private void doTest(String queryString, String fileName, String runner) throws B
 
       if (status > 304){
     	log("[HttpStatus] -- error. Output was: " + helper.getHttpResponseString());
-        throw new BuildException("Http Status returned an error. HttpStatus code: " + status);
+    	if(this.haltOnError) {
+    		throw new BuildException("Http Status returned an error. HttpStatus code: " + status);
+    	}
       }
 
       if(helper.getTotalFailures() > 0 && this.getFailureProperty() != null){
