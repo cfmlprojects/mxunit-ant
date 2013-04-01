@@ -5,20 +5,22 @@
 
 
   <target name="testTotalRuns">
-    <au:assertPropertyEquals name="total.runs" value="4" message="Should be a total of 1 run" />
-   
+    <au:assertPropertyEquals name="total.runs" value="4" message="Should be a total of 4 run (was ${total.runs})" />
   </target>
 
   <target name="testTotalFailures">
-    <au:assertPropertyEquals name="total.failures" value="1" message="Should be a total of 1 run" />
+    <au:assertPropertyEquals name="total.failures" value="1" message="Should be a total of 1 run (was ${total.failures})" />
   </target>
 
 
  <target name="setUp">
   <au:logcontent level="verbose" />
-  <taskdef name="mxunittask" classname="org.mxunit.ant.MXUnitAntTask" classpath="../mxunit-ant.jar"   />
-  <mxunittask server="localhost" port="8500"
-                outputdir="tests/results"
+  <property name="res.dir" location="./results" />
+  <delete dir="${res.dir}" />
+  <mkdir dir="${res.dir}" />
+  <taskdef name="mxunittask" classname="org.mxunit.ant.MXUnitAntTask" classpath="${mxunit.jar}"   />
+  <mxunittask server="${server.host}" port="${server.port.http}"
+                outputdir="${res.dir}"
                 testResultsSummary="au.test.properties"
                 verbose="true"
                 haltonerror="true"

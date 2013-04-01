@@ -18,7 +18,7 @@
              target: testThatErrorPropGetsSet                     
             - - - - - - - - - - - - - - - - - -->       
   <target name="testThatErrorPropGetsSet">
-      <mxunittask server="localhost" port="8500"
+      <mxunittask server="${server.host}" port="${server.port.http}"
                   verbose="true"
                   errorProperty="my.err.prop">
        <testcase name="mxunit.PluginDemoTests.throwsanerrortest"  />
@@ -31,7 +31,7 @@
              target: testThatFailurePropGetsSet                     
             - - - - - - - - - - - - - - - - - -->   
   <target name="testThatFailurePropGetsSet">
-      <mxunittask server="localhost" port="8500"
+      <mxunittask server="${server.host}" port="${server.port.http}"
                   verbose="true"
                   failureproperty="my.fail.prop">
         <testcase name="mxunit.tests.samples.MyComponentTest"  />
@@ -44,11 +44,11 @@
           target: testThatPropDoesNotExistAfterSuccess                      
          - - - - - - - - - - - - - - - - - -->
     <target name="testThatPropDoesNotExistAfterSuccess">
-        <mxunittask server="localhost" port="8500"
+        <mxunittask server="${server.host}" port="${server.port.http}"
                     verbose="true"
                     errorproperty="my.othererr.prop"
                     failureproperty="my.otherfail.prop">
-            <testcase name="mxunit.tests.framework.MyCFCTest"  />
+            <testcase name="mxunit.tests.framework.fixture.MyCFCTest"  />
          </mxunittask>  
         <au:expectfailure message="failureproperty/errorproperty ON. Should fail.">
             <au:assertPropertySet name="my.otherfail.prop" message="Should Not be set in Task"  />
@@ -63,7 +63,7 @@
           target: testThatErrorPropertySetsFailurePropertyToo                      
          - - - - - - - - - - - - - - - - - -->
     <target name="testThatErrorPropertySetsFailurePropertyToo">
-       <mxunittask server="localhost" port="8500"
+       <mxunittask server="${server.host}" port="${server.port.http}"
                    verbose="true"
                    errorProperty="my.err.prop"
            	       failureproperty="my.fail.prop">
@@ -78,7 +78,7 @@
           target: testThatTaskIsNotBrokenWhenFailureOccursAndPropsAreNOTSet                      
          - - - - - - - - - - - - - - - - - -->
     <target name="testThatTaskIsNotBrokenWhenFailureOccursAndPropsAreNOTSet">
-        <mxunittask server="localhost" port="8500"
+        <mxunittask server="${server.host}" port="${server.port.http}"
                     verbose="true">
             <testcase name="mxunit.PluginDemoTests.throwsanerrortest"  />
             <testcase name="mxunit.tests.samples.MyComponentTest"  />
@@ -95,7 +95,7 @@
      
  <target name="setUp">
   <property file="../buildprops/build.properties" />
-    <taskdef name="mxunittask" classname="org.mxunit.ant.MXUnitAntTask" classpath="../mxunit-ant.jar"   />
+    <taskdef name="mxunittask" classname="org.mxunit.ant.MXUnitAntTask" classpath="${mxunit.jar}"   />
   </target>
 
 </project>
