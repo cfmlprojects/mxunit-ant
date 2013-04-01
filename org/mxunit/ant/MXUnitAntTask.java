@@ -28,7 +28,7 @@ import java.text.DecimalFormat;
  */
 public class MXUnitAntTask extends Task {
 
-    String version = "1.0.6";
+    String version = "1.0.7";
     //private Project project;
 
     String server;
