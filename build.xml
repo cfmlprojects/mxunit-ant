@@ -11,8 +11,6 @@
 		</fileset>
 	</path>
 	<property file="testprops.properties" />
-	<!-- load the svn task -->
- 	<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask" classpathref="project.classpath"/>
 	<taskdef uri="antlib:org.apache.ant.antunit" resource="org/apache/ant/antunit/antlib.xml" classpathref="project.classpath" />
 
 	<target name="init">
