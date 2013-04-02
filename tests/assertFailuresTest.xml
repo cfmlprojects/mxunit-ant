@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
- <project xmlns:au="antlib:org.apache.ant.antunit"
+ <project name="mxunit.ant.assertFailuresTest" xmlns:au="antlib:org.apache.ant.antunit"
           xmlns="antlib:org.apache.tools.ant" >
 
  <target name="testCatchFailure">

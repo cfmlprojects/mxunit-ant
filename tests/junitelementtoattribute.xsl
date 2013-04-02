@@ -34,6 +34,9 @@
       <xsl:attribute name="time">
         <xsl:value-of select="time"/>
       </xsl:attribute>
+      <xsl:attribute name="classname">
+        <xsl:value-of select="/testsuite/properties/property[@name='ant.project.name']/@value"/>
+      </xsl:attribute>
       <xsl:apply-templates/>
     </testcase>
   </xsl:template>
