@@ -6,10 +6,13 @@
 		<property name="server.host" value="127.0.0.1" />
 		<property name="mxunit.src.dir" location="../../mxunit" />
 		<property name="mxunit.jar" location="../dist/mxunit-ant.jar" />
+		<property name="antunit.results.dir" location="./results_antunit" />
 		<echo level="info">Running antunit tests (server:${server.host}:${server.port.http})</echo>
 		<echo level="info">CMFL Sources: ${mxunit.src.dir}</echo>
 		<delete dir="results" />
-		<mkdir dir="results" />
+		<delete dir="${antunit.results.dir}" />
+		<mkdir dir="${antunit.results.dir}" />
+		<mkdir dir="${antunit.results.dir}/tmp" />
 		<delete file="mxunit-test.log" />
 		<record name="mxunit-test.log" loglevel="verbose" />
 		<au:antunit>
@@ -23,7 +26,11 @@
 				<include name="*Test.xml" />
 			</fileset>
 			<au:plainlistener />
+			<au:xmllistener toDir="${antunit.results.dir}/tmp" />
 		</au:antunit>
+		<xslt basedir="${antunit.results.dir}/tmp" destdir="${antunit.results.dir}"
+		       extension=".xml" style="junitelementtoattribute.xsl"/>
+		<delete dir="${antunit.results.dir}/tmp" />
 	</target>
 
 </project>

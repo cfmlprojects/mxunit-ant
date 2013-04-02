@@ -1,5 +1,6 @@
 tests/svnTest/
 tests/results/
+tests/results_antunit/
 bin/
 dist/
 mxunit-test.log
